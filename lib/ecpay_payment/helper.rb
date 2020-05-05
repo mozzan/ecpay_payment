@@ -8,16 +8,15 @@ require 'nokogiri'
 require 'date'
 
 class APIHelper
-    conf = File.join('config', 'payment_conf.xml')
-    @@conf_xml = Nokogiri::XML(File.open(conf))
-
-    def initialize
-        active_merc_info = @@conf_xml.xpath('/Conf/MercProfile').text
-        @op_mode = @@conf_xml.xpath('/Conf/OperatingMode').text
-        @contractor_stat = @@conf_xml.xpath('/Conf/IsProjectContractor').text
-        merc_info = @@conf_xml.xpath("/Conf/MerchantInfo/MInfo[@name=\"#{active_merc_info}\"]")
+    def initialize(conf_file)
+        conf = conf_file
+        @conf_xml = Nokogiri::XML(File.open(conf))
+        active_merc_info = @conf_xml.xpath('/Conf/MercProfile').text
+        @op_mode = @conf_xml.xpath('/Conf/OperatingMode').text
+        @contractor_stat = @conf_xml.xpath('/Conf/IsProjectContractor').text
+        merc_info = @conf_xml.xpath("/Conf/MerchantInfo/MInfo[@name=\"#{active_merc_info}\"]")
         @ignore_payment = []
-        @@conf_xml.xpath('/Conf/IgnorePayment//Method').each {|t| @ignore_payment.push(t.text)}
+        @conf_xml.xpath('/Conf/IgnorePayment//Method').each {|t| @ignore_payment.push(t.text)}
         if merc_info != []
             @merc_id = merc_info[0].xpath('./MerchantID').text.freeze
             @hkey = merc_info[0].xpath('./HashKey').text.freeze

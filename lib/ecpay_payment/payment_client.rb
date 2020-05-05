@@ -19,8 +19,8 @@ module ECpayPayment
 	class ECpayPaymentClient
     include ECpayErrorDefinition
 
-		def initialize
-      @helper = APIHelper.new
+		def initialize(conf_file)
+      @helper = APIHelper.new(conf_file)
       @verify_aiochkout = ECpayPayment::AioCheckOutParamVerify.new
 
     end
